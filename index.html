@@ -115,20 +115,15 @@
             const mlgsafeguard = document.getElementById('mlgsafeguard').value;
 
             const emailBody = `
-• Scontrini:
-${scontrini}
+• Scontrini: ${scontrini}
 
-• MyFanSafe:
-${myfansafe}
+• MyFanSafe: ${myfansafe}
 
-• Carte Fan:
-${carteFan}
+• Carte Fan: ${carteFan}
 
-• Finanziamenti:
-${finanziamenti}
+• Finanziamenti: ${finanziamenti}
 
-• MLGSafeGuard:
-${mlgsafeguard}
+• MLGSafeGuard: ${mlgsafeguard}
             `;
             
             const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Dati Modulo&body=${encodeURIComponent(emailBody)}`;
