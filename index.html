@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modulo Raccolta Dati</title>
+    <title>DATI CASSA GIORNO </title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,13 +14,14 @@
         }
         .container {
             background-color: white;
-            padding: 20px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         h1 {
             color: #333;
             text-align: center;
+            margin-bottom: 30px;
         }
         .form-group {
             margin-bottom: 20px;
@@ -29,123 +30,111 @@
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
+            color: #444;
         }
-        select, input {
+        input, textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
         }
         button {
-            background-color: #2979FF;
+            background-color: #4CAF50;
             color: white;
-            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 12px 20px;
             font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
             width: 100%;
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #2462CC;
+            background-color: #45a049;
         }
         .success-message {
-            color: green;
-            text-align: center;
-            margin-top: 20px;
             display: none;
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 20px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Raccolta Dati Punti Vendita</h1>
+        <h1> DATI CASSA GIORNO </h1>
         <form id="dataForm">
             <div class="form-group">
-                <label for="puntoVendita">Cassa:</label>
-                <select id="puntoVendita" name="puntoVendita" required>
-                    <option value="" disabled selected>Seleziona il punto vendita</option>
-                    <option value="FANO">FANO</option>
-                    <option value="MONSANO">MONSANO</option>
-                    <option value="OSIMO">OSIMO</option>
-                    <option value="MACERATA">MACERATA</option>
-                    <option value="CIVITANOVA">CIVITANOVA</option>
-                    <option value="PESARO">PESARO</option>
-                </select>
+                <label for="scontrini">Scontrini:</label>
+                <input type="number" id="scontrini" name="scontrini" required>
             </div>
             
             <div class="form-group">
-                <label for="finanziamenti">FINANZIAMENTI:</label>
-                <input type="number" id="finanziamenti" name="finanziamenti" min="0" required>
+                <label for="myfansafe">MyFanSafe:</label>
+                <input type="number" id="myfansafe" name="myfansafe" required>
             </div>
             
             <div class="form-group">
-                <label for="safeguard">SAFEGUARD:</label>
-                <input type="number" id="safeguard" name="safeguard" min="0" required>
+                <label for="carteFan">Carte Fan:</label>
+                <input type="number" id="carteFan" name="carteFan" required>
+            </div>
+
+            <div class="form-group">
+                <label for="finanziamenti">Finanziamenti:</label>
+                <input type="number" id="finanziamenti" name="finanziamenti" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mlgsafeguard">MLGSafeGuard:</label>
+                <input type="number" id="mlgsafeguard" name="mlgsafeguard" required>
             </div>
             
-            <div>
-                <button type="button" id="mailButton">INVIA MAIL</button>
-            </div>
+            <button type="submit">Invia Email</button>
         </form>
         
         <div id="successMessage" class="success-message">
-            Dati inviati con successo!
+            Email inviata con successo!
         </div>
     </div>
 
     <script>
-        // Funzione per ottenere la data attuale in formato italiano
-        function getFormattedDate() {
-            const date = new Date();
-            return date.toLocaleDateString('it-IT', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        }
-        
-        // Preveniamo l'invio del form standard
-        document.getElementById('dataForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-        });
-        
-        // Funzione per inviare email con i dati del form
-        document.getElementById('mailButton').addEventListener('click', function() {
-            const puntoVendita = document.getElementById('puntoVendita').value;
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const scontrini = document.getElementById('scontrini').value;
+            const myfansafe = document.getElementById('myfansafe').value;
+            const carteFan = document.getElementById('carteFan').value;
             const finanziamenti = document.getElementById('finanziamenti').value;
-            const safeguard = document.getElementById('safeguard').value;
+            const mlgsafeguard = document.getElementById('mlgsafeguard').value;
+
+            const emailBody = `
+• Scontrini:
+${scontrini}
+
+• MyFanSafe:
+${myfansafe}
+
+• Carte Fan:
+${carteFan}
+
+• Finanziamenti:
+${finanziamenti}
+
+• MLGSafeGuard:
+${mlgsafeguard}
+            `;
             
-            if(!puntoVendita || !finanziamenti || !safeguard) {
-                alert('Per favore compila tutti i campi prima di inviare la mail');
-                return;
-            }
-            
-            const dataOggi = getFormattedDate();
-            const oggetto = `Report Punto Vendita ${puntoVendita} - ${dataOggi}`;
-            
-            // Creiamo il corpo della mail con un elenco puntato ben distanziato
-            let corpo = `Buongiorno,\n\nEcco il report giornaliero del ${dataOggi}:\n\n`;
-            corpo += `• Punto Vendita: ${puntoVendita}\n\n`;
-            corpo += `• Finanziamenti: ${finanziamenti}\n\n`;
-            corpo += `• Safeguard: ${safeguard}\n\n`;
-            corpo += `Cordiali saluti,\nPunto Vendita ${puntoVendita}`;
-            
-            // Codifichiamo il corpo della mail per l'URL
-            const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=${encodeURIComponent(oggetto)}&body=${encodeURIComponent(corpo)}`;
-            
-            // Apriamo il client di posta con i dati precompilati
+            const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Dati Modulo&body=${encodeURIComponent(emailBody)}`;
             window.location.href = mailtoLink;
-            
-            // Resetta il form dopo l'invio della mail
-            document.getElementById('dataForm').reset();
-            
-            // Mostra il messaggio di successo
+
             document.getElementById('successMessage').style.display = 'block';
-            
-            // Nascondi il messaggio dopo 3 secondi
             setTimeout(function() {
                 document.getElementById('successMessage').style.display = 'none';
             }, 3000);
