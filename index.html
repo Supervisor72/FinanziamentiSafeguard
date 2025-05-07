@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modulo Raccolta Dati</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #2979FF;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2462CC;
+        }
+        .success-message {
+            color: green;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Raccolta Dati Punti Vendita</h1>
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="puntoVendita">Cassa:</label>
+                <select id="puntoVendita" name="puntoVendita" required>
+                    <option value="" disabled selected>Seleziona il punto vendita</option>
+                    <option value="FANO">FANO</option>
+                    <option value="MONSANO">MONSANO</option>
+                    <option value="OSIMO">OSIMO</option>
+                    <option value="MACERATA">MACERATA</option>
+                    <option value="CIVITANOVA">CIVITANOVA</option>
+                    <option value="PESARO">PESARO</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="finanziamenti">FINANZIAMENTI:</label>
+                <input type="number" id="finanziamenti" name="finanziamenti" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="safeguard">SAFEGUARD:</label>
+                <input type="number" id="safeguard" name="safeguard" min="0" required>
+            </div>
+            
+            <div>
+                <button type="button" id="mailButton">INVIA MAIL</button>
+            </div>
+        </form>
+        
+        <div id="successMessage" class="success-message">
+            Dati inviati con successo!
+        </div>
+    </div>
+
+    <script>
+        // Funzione per ottenere la data attuale in formato italiano
+        function getFormattedDate() {
+            const date = new Date();
+            return date.toLocaleDateString('it-IT', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+        
+        // Preveniamo l'invio del form standard
+        document.getElementById('dataForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+        
+        // Funzione per inviare email con i dati del form
+        document.getElementById('mailButton').addEventListener('click', function() {
+            const puntoVendita = document.getElementById('puntoVendita').value;
+            const finanziamenti = document.getElementById('finanziamenti').value;
+            const safeguard = document.getElementById('safeguard').value;
+            
+            if(!puntoVendita || !finanziamenti || !safeguard) {
+                alert('Per favore compila tutti i campi prima di inviare la mail');
+                return;
+            }
+            
+            const dataOggi = getFormattedDate();
+            const oggetto = `Report Punto Vendita ${puntoVendita} - ${dataOggi}`;
+            
+            // Creiamo il corpo della mail con un elenco puntato ben distanziato
+            let corpo = `Buongiorno,\n\nEcco il report giornaliero del ${dataOggi}:\n\n`;
+            corpo += `• Punto Vendita: ${puntoVendita}\n\n`;
+            corpo += `• Finanziamenti: ${finanziamenti}\n\n`;
+            corpo += `• Safeguard: ${safeguard}\n\n`;
+            corpo += `Cordiali saluti,\nPunto Vendita ${puntoVendita}`;
+            
+            // Codifichiamo il corpo della mail per l'URL
+            const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=${encodeURIComponent(oggetto)}&body=${encodeURIComponent(corpo)}`;
+            
+            // Apriamo il client di posta con i dati precompilati
+            window.location.href = mailtoLink;
+            
+            // Resetta il form dopo l'invio della mail
+            document.getElementById('dataForm').reset();
+            
+            // Mostra il messaggio di successo
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // Nascondi il messaggio dopo 3 secondi
+            setTimeout(function() {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
