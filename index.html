@@ -78,6 +78,15 @@
       </div>
 
       <div class="form-group">
+        <label for="orario">Orario:</label>
+        <select id="orario" name="orario" required>
+          <option value="">-- Seleziona --</option>
+          <option value="ORE 13">ORE 13</option>
+          <option value="ORE 20">ORE 20</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="scontrini">Scontrini:</label>
         <input type="number" id="scontrini" name="scontrini" required>
       </div>
@@ -111,6 +120,7 @@
     document.getElementById('dataForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const puntoVendita = document.getElementById('puntoVendita').value;
+      const orario = document.getElementById('orario').value;
       const scontrini = document.getElementById('scontrini').value;
       const myfansafe = document.getElementById('myfansafe').value;
       const carteFan = document.getElementById('carteFan').value;
@@ -119,19 +129,20 @@
 
       const body = `
 Punto Vendita: ${puntoVendita}
+Orario: ${orario}
 
-• Scontrini:   ${scontrini}
+• Scontrini:  ${scontrini}
 
-• MyFanSafe:   ${myfansafe}
+• MyFanSafe:  ${myfansafe}
 
-• Carte Fan:   ${carteFan}
+• Carte Fan:  ${carteFan}
 
-• Finanziamenti: ${finanziamenti}
+• Finanziamenti:   ${finanziamenti}
 
-• MLGSafeGuard:  ${mlgsafeguard}
+• MLGSafeGuard:   ${mlgsafeguard}
       `;
 
-      const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Report giornaliero - ${puntoVendita}&body=${encodeURIComponent(body)}`;
+      const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Report giornaliero - ${puntoVendita} - ${orario}&body=${encodeURIComponent(body)}`;
       window.location.href = mailtoLink;
 
       document.getElementById('successMessage').style.display = 'block';
