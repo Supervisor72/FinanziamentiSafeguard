@@ -57,6 +57,9 @@
       text-align: center;
       font-weight: bold;
     }
+    .caffe-field {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -116,14 +119,14 @@
         <input type="number" id="pagodil" name="pagodil" required>
       </div>
 
-      <div class="form-group">
+      <div class="form-group caffe-field">
         <label for="vendutoCaffe">VENDUTO CAFFÈ (€):</label>
-        <input type="number" id="vendutoCaffe" name="vendutoCaffe" step="0.01" required>
+        <input type="number" id="vendutoCaffe" name="vendutoCaffe" step="0.01">
       </div>
 
-      <div class="form-group">
+      <div class="form-group caffe-field">
         <label for="incidenzaCaffe">INCIDENZA CAFFÈ GIORNO (%):</label>
-        <input type="number" id="incidenzaCaffe" name="incidenzaCaffe" step="0.01" required>
+        <input type="number" id="incidenzaCaffe" name="incidenzaCaffe" step="0.01">
       </div>
 
       <button type="submit">Invia Email</button>
@@ -132,6 +135,30 @@
   </div>
 
   <script>
+    // Funzione per mostrare/nascondere i campi caffè in base all'orario selezionato
+    document.getElementById('orario').addEventListener('change', function() {
+      const caffeFields = document.querySelectorAll('.caffe-field');
+      const caffeInputs = document.querySelectorAll('.caffe-field input');
+      
+      if (this.value === 'ORE 20') {
+        // Mostra i campi caffè e rendi gli input obbligatori
+        caffeFields.forEach(field => {
+          field.style.display = 'block';
+        });
+        caffeInputs.forEach(input => {
+          input.setAttribute('required', '');
+        });
+      } else {
+        // Nascondi i campi caffè e rimuovi l'attributo required
+        caffeFields.forEach(field => {
+          field.style.display = 'none';
+        });
+        caffeInputs.forEach(input => {
+          input.removeAttribute('required');
+        });
+      }
+    });
+
     document.getElementById('dataForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -143,10 +170,8 @@
       const finanziamenti = document.getElementById('finanziamenti').value;
       const mlgsafeguard = document.getElementById('mlgsafeguard').value;
       const pagodil = document.getElementById('pagodil').value;
-      const vendutoCaffe = document.getElementById('vendutoCaffe').value;
-      const incidenzaCaffe = document.getElementById('incidenzaCaffe').value;
-
-      const body = `
+      
+      let body = `
 Punto Vendita: ${puntoVendita}
 Orario: ${orario}
 
@@ -161,11 +186,20 @@ Orario: ${orario}
 • MLGSafeGuard:   ${mlgsafeguard}
 
 • PagoDIL Giorno:   ${pagodil}
+      `;
+
+      // Aggiungi i campi caffè al corpo dell'email solo se l'orario è ORE 20
+      if (orario === 'ORE 20') {
+        const vendutoCaffe = document.getElementById('vendutoCaffe').value;
+        const incidenzaCaffe = document.getElementById('incidenzaCaffe').value;
+        
+        body += `
 
 • VENDUTO CAFFÈ:   ${vendutoCaffe} €
 
 • INCIDENZA CAFFÈ GIORNO:   ${incidenzaCaffe} %
-      `;
+        `;
+      }
 
       const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Report giornaliero - ${puntoVendita} - ${orario}&body=${encodeURIComponent(body)}`;
       window.location.href = mailtoLink;
