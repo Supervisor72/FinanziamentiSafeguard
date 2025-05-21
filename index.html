@@ -116,6 +116,16 @@
         <input type="number" id="pagodil" name="pagodil" required>
       </div>
 
+      <div class="form-group">
+        <label for="vendutoCaffe">VENDUTO CAFFÈ (€):</label>
+        <input type="number" id="vendutoCaffe" name="vendutoCaffe" step="0.01" required>
+      </div>
+
+      <div class="form-group">
+        <label for="incidenzaCaffe">INCIDENZA CAFFÈ GIORNO (%):</label>
+        <input type="number" id="incidenzaCaffe" name="incidenzaCaffe" step="0.01" required>
+      </div>
+
       <button type="submit">Invia Email</button>
       <div id="successMessage" class="success-message">Email inviata con successo!</div>
     </form>
@@ -133,6 +143,8 @@
       const finanziamenti = document.getElementById('finanziamenti').value;
       const mlgsafeguard = document.getElementById('mlgsafeguard').value;
       const pagodil = document.getElementById('pagodil').value;
+      const vendutoCaffe = document.getElementById('vendutoCaffe').value;
+      const incidenzaCaffe = document.getElementById('incidenzaCaffe').value;
 
       const body = `
 Punto Vendita: ${puntoVendita}
@@ -149,6 +161,10 @@ Orario: ${orario}
 • MLGSafeGuard:   ${mlgsafeguard}
 
 • PagoDIL Giorno:   ${pagodil}
+
+• VENDUTO CAFFÈ:   ${vendutoCaffe} €
+
+• INCIDENZA CAFFÈ GIORNO:   ${incidenzaCaffe} %
       `;
 
       const mailtoLink = `mailto:d.pavoni@dml-italia.com?subject=Report giornaliero - ${puntoVendita} - ${orario}&body=${encodeURIComponent(body)}`;
